@@ -138,7 +138,10 @@ class NativeWebSockets {
         //noinspection JSUnresolvedVariable
         this._allowCell = (options.allowCellular !== false);
 
-        this._headers = options.headers || [];
+        this._headers = options.headers || {};
+
+        this._ignoreCache = !!options.ignoreCache;
+
         // Fix an issue: https://github.com/zwopple/PocketSocket/issues/73
         this._headers['Connection'] = "Upgrade";
 
@@ -176,13 +179,17 @@ class NativeWebSockets {
             urlRequest.addValueForHTTPHeaderField(this._protocols.join(" "), "Sec-WebSocket-Protocol");
         }
         for (let name in this._headers) {
-            if (!this._headers.hasOwnProperty(name)) continue;
+
             const value = this._headers[name];
             //noinspection JSUnresolvedFunction
             urlRequest.addValueForHTTPHeaderField(value, name);
+
         }
         if (this._timeout !== -1) {
             urlRequest.timeoutInterval = this._timeout;
+        }
+        if(this._ignoreCache){
+            urlRequest.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringLocalCacheData
         }
 
         //noinspection JSUnresolvedFunction

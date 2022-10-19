@@ -1,5 +1,5 @@
 {
-  "name": "@master.technology/websockets",
+  "name": "nativescript-websockets",
   "version": "2.0.4",
   "description": "A WebSocket NativeScript module for Android and iOS",
   "main": "websockets",

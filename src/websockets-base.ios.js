@@ -84,6 +84,7 @@ class NativeWebSockets {
     constructor(url, options) {
         options = options || {};
 
+
         // Instance versions of the connection state
         this.NOT_YET_CONNECTED = -1;
         this.CONNECTING = 0;
@@ -119,7 +120,8 @@ class NativeWebSockets {
 
         this._allowCell = (options.allowCellular !== false);
 
-        this._headers = options.headers || [];
+        this._headers = options.headers || {};
+        this._ignoreCache = !!options.ignoreCache;
 
         this.on("close", () => {
             if (this._browser) {
@@ -152,7 +154,8 @@ class NativeWebSockets {
             urlRequest.addValueForHTTPHeaderField(this._protocols.join(" "), "Sec-WebSocket-Protocol");
         }
         for (let name in this._headers) {
-            if (!this._headers.hasOwnProperty(name)) continue;
+
+            //if (!this._headers.hasOwnProperty(name)) continue;
             const value = this._headers[name];
             urlRequest.addValueForHTTPHeaderField(value, name);
         }
@@ -161,12 +164,17 @@ class NativeWebSockets {
             urlRequest.timeoutInterval = this._timeout / 1000; // Convert to seconds for NSURLRequest. This honors the API spec for timeout cross-platform.
         }
 
+        if(this._ignoreCache){
+            urlRequest.cachePolicy = NSURLRequestReloadIgnoringLocalCacheData
+        }        
+
         this._webSocketDelegate = WebSocketDelegate.alloc().init();
         this._webSocketDelegate.wrapper = new WeakRef(this);
         this._webSocketDelegate.debug = this._debug;
         
+        var sessionConfig = this._ignoreCache ? NSURLSessionConfiguration.ephemeralSessionConfiguration : NSURLSessionConfiguration.defaultSessionConfiguration 
         const queue = NSOperationQueue.mainQueue;
-        const urlSess = NSURLSession.sessionWithConfigurationDelegateDelegateQueue(NSURLSessionConfiguration.defaultSessionConfiguration, this._webSocketDelegate, queue);
+        const urlSess = NSURLSession.sessionWithConfigurationDelegateDelegateQueue(sessionConfig, this._webSocketDelegate, queue);
         this._nsWebSocketTask = urlSess.webSocketTaskWithRequest(urlRequest);
     }
 

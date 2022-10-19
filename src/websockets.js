@@ -94,13 +94,16 @@ class BrowserWebSocketsEvent {
  * @constructor
  */
 class BrowserWebSockets extends NativeWebSockets {
-    constructor(url, protocols) {
-        const options = {browser: true}
-        if (protocols != null) {
-            if (!Array.isArray(protocols)) {
-                options.protocols = [protocols];
+    constructor(url, options) {
+        options = options || {}
+
+        options.browser = true
+
+        if (options.protocols != null) {
+            if (!Array.isArray(options.protocols)) {
+                options.protocols = [options.protocols];
             } else {
-                options.protocols = protocols;
+                options.protocols = options.protocols;
             }
         }
         super(url, options);

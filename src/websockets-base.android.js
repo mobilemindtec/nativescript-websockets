@@ -262,7 +262,7 @@ class NativeWebSockets {
         this._timeout = options.timeout || 10000;
         this._connectionLostTimeout = options.connectionLostTimeout;
 
-        this._headers = options.headers || [];
+        this._headers = options.headers || {};
         if (this._debug === true) {
             org.java_websocket.WebSocketImpl.DEBUG = true;
         }

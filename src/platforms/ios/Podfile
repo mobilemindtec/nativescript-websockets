@@ -1,1 +1,1 @@
-pod 'PocketSocket', :git => 'https://github.com/NathanaelA/PocketSocket'
+pod 'PocketSocket', :git => 'https://github.com/mobilemindtec/PocketSocket'
