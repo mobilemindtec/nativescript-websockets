@@ -7,6 +7,9 @@ node_modules/
 demo/platforms/
 demo1/
 demo_server/
+publish/package
+publish/src
+package-lock.json
 
 
 # OS X
